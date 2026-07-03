@@ -8,7 +8,7 @@ import { BIBLE_BOOKS } from '@/lib/bible-data';
 import Editor from '@/components/Editor';
 import BibleHeader from '@/components/BibleHeader';
 import Verse from '@/components/Verse';
-import { Loader2 } from 'lucide-react';
+import { Loader2, BookOpen, PenTool } from 'lucide-react';
 
 const TRANSLATIONS = [
   { id: process.env.NEXT_PUBLIC_NASB_ID, name: 'ASV' }, 
@@ -28,6 +28,7 @@ export default function StudyPage({ params }) {
   const [processedVerses, setProcessedVerses] = useState([]);
   const [wordHighlights, setWordHighlights] = useState({});
   const [fontClass, setFontClass] = useState('font-reading-serif');
+  const [activeMobileView, setActiveMobileView] = useState('bible'); // 'bible' or 'journal'
 
   useEffect(() => {
     if (!authLoading && !user) router.push('/login');
@@ -91,14 +92,28 @@ export default function StudyPage({ params }) {
   if (authLoading || !user || !bookId) return <div className="h-screen flex items-center justify-center bg-[#fdfbf7]"><Loader2 className="animate-spin text-stone-300" /></div>;
 
   return (
-    <div className="flex h-screen bg-[#fdfbf7] overflow-hidden">
-      <div className="flex-1 flex flex-col border-r border-[#e8e4db] relative shadow-2xl bg-[#fdfbf7]">
+    <div className="flex h-screen bg-[#fdfbf7] overflow-hidden flex-col md:flex-row">
+      
+      {/* HEADER: Dynamic for Mobile/Desktop */}
+      <div className="w-full flex flex-col border-r border-[#e8e4db] md:w-1/2 relative bg-[#fdfbf7]">
         <BibleHeader 
            bookId={bookId} chapter={chapter} setChapter={setChapter} 
            bibleId={bibleId} setBibleId={setBibleId} translations={TRANSLATIONS}
            activeFont={fontClass} setFont={setFontClass}
         />
-        <div className="flex-1 overflow-y-auto px-12 lg:px-20 py-24 scroll-smooth">
+        
+        {/* MOBILE VIEW TOGGLE */}
+        <div className="md:hidden flex p-1 bg-stone-100 mx-8 mt-4 rounded-xl border border-stone-200">
+           <button onClick={() => setActiveMobileView('bible')} className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold transition-all ${activeMobileView === 'bible' ? 'bg-white shadow-sm text-[#1a4f8b]' : 'text-stone-400'}`}>
+             <BookOpen size={16}/> Scripture
+           </button>
+           <button onClick={() => setActiveMobileView('journal')} className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold transition-all ${activeMobileView === 'journal' ? 'bg-white shadow-sm text-[#1a4f8b]' : 'text-stone-400'}`}>
+             <PenTool size={16}/> Journal
+           </button>
+        </div>
+
+        {/* BIBLE SCROLL (Visible if Bible view or on Desktop) */}
+        <div className={`flex-1 overflow-y-auto px-8 md:px-12 lg:px-20 py-12 md:py-24 scroll-smooth ${activeMobileView === 'bible' ? 'block' : 'hidden md:block'}`}>
           <div className="max-w-[600px] mx-auto">
             {loading ? (
               <div className="flex justify-center py-20"><Loader2 className="animate-spin text-[#1a4f8b]/20" size={40} /></div>
@@ -121,15 +136,16 @@ export default function StudyPage({ params }) {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col bg-white">
-        <header className="h-16 border-b border-gray-100 px-12 flex items-center justify-between shrink-0 bg-white/50 backdrop-blur-md z-10">
+      {/* JOURNAL SIDE (Visible if Journal view or on Desktop) */}
+      <div className={`flex-1 flex-col bg-white overflow-hidden ${activeMobileView === 'journal' ? 'flex' : 'hidden md:flex'}`}>
+        <header className="h-16 border-b border-gray-100 px-12 items-center justify-between shrink-0 bg-white/50 backdrop-blur-md z-10 hidden md:flex">
            <div className="flex items-center gap-3">
              <div className="w-2 h-2 rounded-full bg-[#1a4f8b]"></div>
              <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-stone-400">Study Journal</span>
            </div>
            <span className="text-[10px] font-bold text-stone-300 uppercase tracking-widest">{bookId} {chapter}</span>
         </header>
-        <div className="flex-1 overflow-y-auto p-8 lg:p-16 relative bg-white">
+        <div className="flex-1 overflow-y-auto p-6 md:p-8 lg:p-16 relative">
            <div className="max-w-[700px] mx-auto">
              <Editor bookId={bookId} chapter={chapter} userId={user?.uid} />
            </div>
