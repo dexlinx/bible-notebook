@@ -29,7 +29,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fdfbf7] flex items-center justify-center p-6 font-sans">
+    <div className="min-h-screen bg-[#fdfbf7] flex flex-col items-center justify-center p-6 font-sans overflow-y-auto">
       <div className="max-w-md w-full">
         {/* LOGO AREA */}
         <div className="text-center mb-10">
