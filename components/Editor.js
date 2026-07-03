@@ -78,8 +78,9 @@ export default function Editor({ bookId, chapter, userId }) {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
-        bulletList: { keepMarks: true, keepAttributes: false },
-        orderedList: { keepMarks: true, keepAttributes: false },
+        bulletList: { keepMarks: true, keepAttributes: true },
+        orderedList: { keepMarks: true, keepAttributes: true },
+        listItem: {},
       }),
       TextStyle,
       Color,
