@@ -1,0 +1,80 @@
+/* 1. FONT IMPORTS */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap');
+
+/* 2. LOCAL OPEN DYSLEXIC */
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('/OpenDyslexic-Regular.woff2') format('woff2'),
+       url('/OpenDyslexic-Regular.woff') format('woff'),
+       url('/OpenDyslexic-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('/OpenDyslexic-Bold.woff2') format('woff2'),
+       url('/OpenDyslexic-Bold.woff') format('woff'),
+       url('/OpenDyslexic-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui;
+  --font-serif: "Instrument Serif", serif;
+  
+  --color-brand: #1a4f8b;
+  --color-paper: #fdfbf7;
+  --color-ink: #18181b;
+  --color-canvas: #fafafa;
+}
+
+/* 3. RIGID FONT INJECTION */
+[data-font="font-reading-serif"] * { font-family: "Instrument Serif", serif !important; }
+[data-font="font-reading-garamond"] * { font-family: "EB Garamond", serif !important; }
+[data-font="font-reading-merriweather"] * { font-family: "Merriweather", serif !important; }
+[data-font="font-reading-sans"] * { font-family: "Inter", sans-serif !important; }
+[data-font="font-reading-dyslexic"] * { font-family: "OpenDyslexic", sans-serif !important; }
+
+@layer base {
+  body {
+    @apply bg-canvas text-ink antialiased overflow-hidden;
+  }
+
+  /* FIX FOR BULLET LISTS & TYPOGRAPHY */
+  .prose ul {
+    list-style-type: disc !important;
+    padding-left: 1.5rem !important;
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+  }
+  .prose ol {
+    list-style-type: decimal !important;
+    padding-left: 1.5rem !important;
+  }
+  .prose li {
+    margin-top: 0.25rem !important;
+    margin-bottom: 0.25rem !important;
+  }
+}
+
+@layer components {
+  mark {
+    @apply bg-yellow-100/70 border-b-2 border-yellow-300 text-inherit px-0.5 rounded-sm;
+  }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-thumb { @apply bg-stone-200 rounded-full hover:bg-stone-300; }
+  .glass-header {
+    @apply sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-stone-100;
+  }
+}
+
+*:focus { outline: none !important; }
